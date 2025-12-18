@@ -14,18 +14,18 @@ interface Branch {
   glowColor: string;
 }
 
-const branches: Branch[] = [
-  { id: 'cse', name: 'CSE', position: [6, 0, 0], size: 0.5, color: '#3B82F6', glowColor: '#60A5FA' },
-  { id: 'cse-ai', name: 'CSE AI', position: [4, 0, 5], size: 0.55, color: '#8B5CF6', glowColor: '#A78BFA' },
-  { id: 'cse-ai-ds', name: 'CSE AI-DS', position: [-2, 0, 7], size: 0.6, color: '#EC4899', glowColor: '#F472B6' },
-  { id: 'cse-cs', name: 'CSE CS', position: [-6, 0, 2], size: 0.45, color: '#14B8A6', glowColor: '#2DD4BF' },
-  { id: 'it', name: 'IT', position: [-5, 0, -4], size: 0.5, color: '#F59E0B', glowColor: '#FBBF24' },
-  { id: 'ecm', name: 'ECM', position: [0, 0, -7], size: 0.55, color: '#EF4444', glowColor: '#F87171' },
+const branches: (Branch & { planetType: string })[] = [
+  { id: 'cse', name: 'CSE', position: [6, 0, 0], size: 0.6, color: '#4A90D9', glowColor: '#87CEEB', planetType: 'Earth' },
+  { id: 'cse-ai', name: 'CSE AI', position: [4, 0, 5], size: 0.5, color: '#CD5C5C', glowColor: '#DEB887', planetType: 'Mars' },
+  { id: 'cse-ai-ds', name: 'CSE AI-DS', position: [-2, 0, 7], size: 0.8, color: '#D4A574', glowColor: '#F4A460', planetType: 'Jupiter' },
+  { id: 'cse-cs', name: 'CSE CS', position: [-6, 0, 2], size: 0.7, color: '#F4D03F', glowColor: '#FAD02C', planetType: 'Saturn' },
+  { id: 'it', name: 'IT', position: [-5, 0, -4], size: 0.55, color: '#E6C47A', glowColor: '#FFD89B', planetType: 'Venus' },
+  { id: 'ecm', name: 'ECM', position: [0, 0, -7], size: 0.6, color: '#4169E1', glowColor: '#6495ED', planetType: 'Neptune' },
 ];
 
 const decorativePlanets = [
-  { position: [7, 0, -5] as [number, number, number], size: 0.3, color: '#6B7280', glowColor: '#9CA3AF' },
-  { position: [-8, 0, -2] as [number, number, number], size: 0.35, color: '#78716C', glowColor: '#A8A29E' },
+  { position: [7, 0, -5] as [number, number, number], size: 0.35, color: '#72CFF8', glowColor: '#AFEEEE', planetType: 'Uranus' },
+  { position: [-8, 0, -2] as [number, number, number], size: 0.3, color: '#8C7853', glowColor: '#A09080', planetType: 'Mercury' },
 ];
 
 interface SolarSystemSceneProps {
@@ -66,6 +66,7 @@ export const SolarSystemScene = ({ onPlanetClick, isTransitioning }: SolarSystem
               label={branch.name}
               onClick={() => onPlanetClick(branch.id, branch.name)}
               isSelectable={true}
+              planetType={branch.planetType}
             />
           ))}
           
@@ -78,6 +79,7 @@ export const SolarSystemScene = ({ onPlanetClick, isTransitioning }: SolarSystem
               color={planet.color}
               glowColor={planet.glowColor}
               isSelectable={false}
+              planetType={planet.planetType}
             />
           ))}
         </Suspense>
