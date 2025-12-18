@@ -15,6 +15,7 @@ const PLANET_CONFIGS: Record<string, {
   hasClouds?: boolean;
   surfaceRoughness?: number;
   moons?: { orbitRadius: number; size: number; color: string; orbitSpeed: number; initialAngle?: number }[];
+  uranusRings?: boolean;
 }> = {
   'Mercury': {
     baseColor: '#8C7853',
@@ -76,8 +77,9 @@ const PLANET_CONFIGS: Record<string, {
     secondaryColor: '#4AB8E8',
     atmosphereColor: '#AFEEEE',
     hasRings: true,
-    ringColor: '#B0C4DE',
+    ringColor: '#A8C8D8',
     surfaceRoughness: 0.3,
+    uranusRings: true, // Special flag for vertical rings
   },
   'Neptune': {
     baseColor: '#4169E1',
@@ -290,17 +292,84 @@ export const Planet = ({
         />
       </mesh>
 
-      {/* Rings for Saturn and Uranus */}
-      {config.hasRings && (
-        <mesh rotation={[Math.PI / 2.5, 0, 0]}>
-          <ringGeometry args={[size * 1.4, size * 2.2, 64]} />
-          <meshBasicMaterial
-            color={config.ringColor}
-            transparent
-            opacity={0.6}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
+      {/* Realistic Saturn-style rings */}
+      {config.hasRings && !config.uranusRings && (
+        <group rotation={[Math.PI / 2.5, 0, 0]}>
+          {/* Inner ring */}
+          <mesh>
+            <ringGeometry args={[size * 1.3, size * 1.5, 128]} />
+            <meshBasicMaterial
+              color="#A89078"
+              transparent
+              opacity={0.5}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+          {/* Main ring */}
+          <mesh>
+            <ringGeometry args={[size * 1.55, size * 1.9, 128]} />
+            <meshBasicMaterial
+              color={config.ringColor}
+              transparent
+              opacity={0.7}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+          {/* Cassini division (gap) */}
+          <mesh>
+            <ringGeometry args={[size * 1.9, size * 1.95, 128]} />
+            <meshBasicMaterial
+              color="#000000"
+              transparent
+              opacity={0.3}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+          {/* Outer ring */}
+          <mesh>
+            <ringGeometry args={[size * 1.95, size * 2.3, 128]} />
+            <meshBasicMaterial
+              color="#C9B896"
+              transparent
+              opacity={0.4}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+          {/* Faint outer ring */}
+          <mesh>
+            <ringGeometry args={[size * 2.3, size * 2.6, 128]} />
+            <meshBasicMaterial
+              color="#B8A888"
+              transparent
+              opacity={0.15}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        </group>
+      )}
+
+      {/* Uranus-style vertical rings */}
+      {config.uranusRings && (
+        <group rotation={[0.1, 0, Math.PI / 2]}>
+          <mesh>
+            <ringGeometry args={[size * 1.4, size * 1.5, 64]} />
+            <meshBasicMaterial
+              color="#7EB8C9"
+              transparent
+              opacity={0.3}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+          <mesh>
+            <ringGeometry args={[size * 1.55, size * 1.7, 64]} />
+            <meshBasicMaterial
+              color="#A8C8D8"
+              transparent
+              opacity={0.25}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        </group>
       )}
 
       {/* Glow effect */}
