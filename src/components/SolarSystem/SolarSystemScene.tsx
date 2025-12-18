@@ -55,6 +55,38 @@ export const SolarSystemScene = ({ onPlanetClick, isTransitioning }: SolarSystem
           <StarField count={4000} />
           <Sun />
           
+          {/* Orbital paths */}
+          {branches.map((branch) => {
+            const distance = Math.sqrt(branch.position[0] ** 2 + branch.position[2] ** 2);
+            return (
+              <mesh key={`orbit-${branch.id}`} rotation={[-Math.PI / 2, 0, 0]}>
+                <ringGeometry args={[distance - 0.02, distance + 0.02, 128]} />
+                <meshBasicMaterial 
+                  color="#4FC3F7" 
+                  transparent 
+                  opacity={0.15}
+                  side={2}
+                />
+              </mesh>
+            );
+          })}
+          
+          {/* Decorative orbital paths */}
+          {decorativePlanets.map((planet, index) => {
+            const distance = Math.sqrt(planet.position[0] ** 2 + planet.position[2] ** 2);
+            return (
+              <mesh key={`orbit-decorative-${index}`} rotation={[-Math.PI / 2, 0, 0]}>
+                <ringGeometry args={[distance - 0.015, distance + 0.015, 128]} />
+                <meshBasicMaterial 
+                  color="#4FC3F7" 
+                  transparent 
+                  opacity={0.08}
+                  side={2}
+                />
+              </mesh>
+            );
+          })}
+          
           {/* Branch planets */}
           {branches.map((branch) => (
             <Planet
