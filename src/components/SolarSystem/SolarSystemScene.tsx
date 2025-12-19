@@ -4,7 +4,6 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { StarField } from './StarField';
 import { Sun } from './Sun';
 import { Planet } from './Planet';
-import { ShootingStar } from './ShootingStar';
 import { AsteroidBelt } from './AsteroidBelt';
 
 interface Branch {
@@ -57,11 +56,6 @@ export const SolarSystemScene = ({ onPlanetClick, isTransitioning }: SolarSystem
         <Suspense fallback={null}>
           <StarField count={6000} />
           <Sun />
-          
-          {/* Shooting stars */}
-          {[...Array(5)].map((_, i) => (
-            <ShootingStar key={i} delay={i * 3} />
-          ))}
           
           {/* Asteroid belt between Mars and Jupiter */}
           <AsteroidBelt innerRadius={9} outerRadius={11} count={400} />
