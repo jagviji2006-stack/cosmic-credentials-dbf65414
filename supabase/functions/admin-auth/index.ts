@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -30,44 +29,45 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     if (action === 'login') {
-      // Fetch admin credentials from database
-      const { data: adminData, error: fetchError } = await supabase
-        .from('admin_credentials')
-        .select('id, username, password_hash')
-        .eq('username', username)
-        .single();
+      // Verify credentials using database function (uses pgcrypto)
+      const { data: authResult, error: authError } = await supabase
+        .rpc('verify_admin_password', { 
+          p_username: username, 
+          p_password: password 
+        });
 
-      if (fetchError || !adminData) {
-        console.log('Admin not found:', fetchError?.message);
+      if (authError) {
+        console.error('Auth verification error:', authError);
+        return new Response(
+          JSON.stringify({ error: 'Authentication failed' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (!authResult || authResult.length === 0 || !authResult[0].is_valid) {
+        console.log('Invalid credentials for user:', username);
         return new Response(
           JSON.stringify({ error: 'Invalid credentials' }),
           { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
 
-      // Verify password
-      const isValid = await bcrypt.compare(password, adminData.password_hash);
-      
-      if (!isValid) {
-        console.log('Invalid password for user:', username);
-        return new Response(
-          JSON.stringify({ error: 'Invalid credentials' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
+      const adminId = authResult[0].admin_id;
 
-      // Generate a simple session token (in production, use JWT with expiry)
+      // Generate a session token
       const sessionToken = crypto.randomUUID() + '-' + Date.now();
-      const tokenHash = await bcrypt.hash(sessionToken, await bcrypt.genSalt(8));
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
-      // Store session in admin_credentials (we'll update the table to support this)
-      const { error: updateError } = await supabase
-        .from('admin_credentials')
-        .update({ session_token: tokenHash, session_expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() })
-        .eq('id', adminData.id);
+      // Store session using database function
+      const { error: sessionError } = await supabase
+        .rpc('update_admin_session', {
+          p_admin_id: adminId,
+          p_session_token: sessionToken,
+          p_expires_at: expiresAt
+        });
 
-      if (updateError) {
-        console.error('Failed to store session:', updateError);
+      if (sessionError) {
+        console.error('Failed to store session:', sessionError);
       }
 
       console.log('Admin login successful:', username);
@@ -75,7 +75,7 @@ serve(async (req) => {
         JSON.stringify({ 
           success: true, 
           token: sessionToken,
-          adminId: adminData.id 
+          adminId: adminId 
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

@@ -76,7 +76,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_admin_session: {
+        Args: {
+          p_admin_id: string
+          p_expires_at: string
+          p_session_token: string
+        }
+        Returns: undefined
+      }
+      verify_admin_password: {
+        Args: { p_password: string; p_username: string }
+        Returns: {
+          admin_id: string
+          is_valid: boolean
+        }[]
+      }
+      verify_admin_session: {
+        Args: { p_admin_id: string; p_session_token: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

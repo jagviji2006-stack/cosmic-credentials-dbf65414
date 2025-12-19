@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -29,34 +28,23 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Verify admin session
-    const { data: adminData, error: fetchError } = await supabase
-      .from('admin_credentials')
-      .select('session_token, session_expires')
-      .eq('id', adminId)
-      .single();
+    // Verify admin session using database function
+    const { data: isValid, error: verifyError } = await supabase
+      .rpc('verify_admin_session', {
+        p_admin_id: adminId,
+        p_session_token: token
+      });
 
-    if (fetchError || !adminData) {
-      console.log('Admin not found:', fetchError?.message);
+    if (verifyError) {
+      console.error('Session verification error:', verifyError);
       return new Response(
-        JSON.stringify({ error: 'Invalid session' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Session verification failed' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Check session expiry
-    if (!adminData.session_expires || new Date(adminData.session_expires) < new Date()) {
-      console.log('Session expired');
-      return new Response(
-        JSON.stringify({ error: 'Session expired' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Verify token
-    const isValidToken = await bcrypt.compare(token, adminData.session_token || '');
-    if (!isValidToken) {
-      console.log('Invalid token');
+    if (!isValid) {
+      console.log('Invalid or expired session');
       return new Response(
         JSON.stringify({ error: 'Invalid session' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
