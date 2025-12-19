@@ -1,1 +1,10 @@
 project_id = "mcqcfyinibkgubroirbr"
+
+[functions.admin-auth]
+verify_jwt = false
+
+[functions.admin-registrations]
+verify_jwt = false
+
+[functions.search-registration]
+verify_jwt = false
