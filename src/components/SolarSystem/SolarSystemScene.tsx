@@ -18,17 +18,17 @@ interface Branch {
 
 // Better spaced planets with realistic orbital distances
 const branches: (Branch & { planetType: string })[] = [
-  { id: 'cse', name: 'CSE', position: [8, 0, 0], size: 0.6, color: '#4A90D9', glowColor: '#87CEEB', planetType: 'Earth' },
-  { id: 'cse-ai', name: 'CSE AI', position: [5.5, 0, 9.5], size: 0.45, color: '#CD5C5C', glowColor: '#DEB887', planetType: 'Mars' },
-  { id: 'cse-ai-ds', name: 'CSE AI-DS', position: [-10, 0, 12], size: 0.9, color: '#D4A574', glowColor: '#F4A460', planetType: 'Jupiter' },
-  { id: 'cse-cs', name: 'CSE CS', position: [-18, 0, 5], size: 0.8, color: '#F4D03F', glowColor: '#FAD02C', planetType: 'Saturn' },
-  { id: 'it', name: 'IT', position: [-4, 0, -6], size: 0.5, color: '#E6C47A', glowColor: '#FFD89B', planetType: 'Venus' },
-  { id: 'ecm', name: 'ECM', position: [6, 0, -14], size: 0.55, color: '#4169E1', glowColor: '#6495ED', planetType: 'Neptune' },
-  { id: 'cse-ds', name: 'CSE DS', position: [14, 0, -8], size: 0.6, color: '#72CFF8', glowColor: '#AFEEEE', planetType: 'Uranus' },
+  { id: 'cse', name: 'CSE', position: [6, 0, 0], size: 0.6, color: '#4A90D9', glowColor: '#87CEEB', planetType: 'Earth' },
+  { id: 'cse-ai', name: 'CSE AI', position: [4, 0, 7], size: 0.45, color: '#CD5C5C', glowColor: '#DEB887', planetType: 'Mars' },
+  { id: 'cse-ai-ds', name: 'CSE AI-DS', position: [-7, 0, 8], size: 0.9, color: '#D4A574', glowColor: '#F4A460', planetType: 'Jupiter' },
+  { id: 'cse-cs', name: 'CSE CS', position: [-12, 0, 3], size: 0.8, color: '#F4D03F', glowColor: '#FAD02C', planetType: 'Saturn' },
+  { id: 'it', name: 'IT', position: [-3, 0, -5], size: 0.5, color: '#E6C47A', glowColor: '#FFD89B', planetType: 'Venus' },
+  { id: 'ecm', name: 'ECM', position: [4, 0, -9], size: 0.55, color: '#4169E1', glowColor: '#6495ED', planetType: 'Neptune' },
+  { id: 'cse-ds', name: 'CSE DS', position: [10, 0, -5], size: 0.6, color: '#72CFF8', glowColor: '#AFEEEE', planetType: 'Uranus' },
 ];
 
 const decorativePlanets = [
-  { position: [4, 0, -3] as [number, number, number], size: 0.3, color: '#8C7853', glowColor: '#A09080', planetType: 'Mercury' },
+  { position: [3, 0, -2.5] as [number, number, number], size: 0.3, color: '#8C7853', glowColor: '#A09080', planetType: 'Mercury' },
 ];
 
 interface SolarSystemSceneProps {
@@ -64,7 +64,7 @@ export const SolarSystemScene = ({ onPlanetClick, isTransitioning }: SolarSystem
           ))}
           
           {/* Asteroid belt between Mars and Jupiter */}
-          <AsteroidBelt innerRadius={13} outerRadius={16} count={400} />
+          <AsteroidBelt innerRadius={9} outerRadius={11} count={400} />
           
           {/* Orbital paths */}
           {branches.map((branch) => {

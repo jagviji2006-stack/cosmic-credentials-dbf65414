@@ -163,8 +163,8 @@
   }
 
   .planet-label {
-    @apply font-display font-bold text-sm tracking-wider uppercase;
-    @apply px-3 py-1 rounded-full;
+    @apply font-display font-bold text-lg tracking-wider uppercase;
+    @apply px-4 py-2 rounded-full;
     @apply bg-background/80 backdrop-blur-sm border border-primary/50;
     @apply text-primary;
     text-shadow: 0 0 10px hsl(var(--primary));

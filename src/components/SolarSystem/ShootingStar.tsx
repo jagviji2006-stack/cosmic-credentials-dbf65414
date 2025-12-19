@@ -15,21 +15,17 @@ export const ShootingStar = ({ delay = 0 }: ShootingStarProps) => {
   const progressRef = useRef(0);
 
   const resetStar = () => {
-    // Random starting position on a sphere
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.random() * Math.PI * 0.5 + Math.PI * 0.25;
-    const radius = 40 + Math.random() * 20;
-    
-    const startX = radius * Math.sin(phi) * Math.cos(theta);
-    const startY = radius * Math.cos(phi) + 10;
-    const startZ = radius * Math.sin(phi) * Math.sin(theta);
+    // Start from behind/below the scene (negative Z, lower Y)
+    const startX = (Math.random() - 0.5) * 40;
+    const startY = Math.random() * 10 - 5;
+    const startZ = -30 - Math.random() * 20;
     
     setPosition({ x: startX, y: startY, z: startZ });
     
-    // Direction towards center with some randomness
-    const dirX = -startX * 0.5 + (Math.random() - 0.5) * 20;
-    const dirY = -startY * 0.3 - Math.random() * 10;
-    const dirZ = -startZ * 0.5 + (Math.random() - 0.5) * 20;
+    // Direction towards front/top (positive Z, upward Y)
+    const dirX = (Math.random() - 0.5) * 0.3;
+    const dirY = 0.2 + Math.random() * 0.3;
+    const dirZ = 0.8 + Math.random() * 0.2;
     
     const len = Math.sqrt(dirX * dirX + dirY * dirY + dirZ * dirZ);
     setDirection({ x: dirX / len, y: dirY / len, z: dirZ / len });
