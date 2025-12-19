@@ -13,9 +13,9 @@ serve(async (req) => {
   }
 
   try {
-    const { token, adminId } = await req.json();
+    const { token, adminId, action, registrationId } = await req.json();
     
-    console.log('Admin registrations request for adminId:', adminId);
+    console.log('Admin registrations request for adminId:', adminId, 'action:', action);
 
     if (!token || !adminId) {
       return new Response(
@@ -48,6 +48,28 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ error: 'Invalid session' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Handle delete action
+    if (action === 'delete' && registrationId) {
+      const { error: deleteError } = await supabase
+        .from('registrations')
+        .delete()
+        .eq('id', registrationId);
+
+      if (deleteError) {
+        console.error('Failed to delete registration:', deleteError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to delete registration' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      console.log('Deleted registration:', registrationId);
+      return new Response(
+        JSON.stringify({ success: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 

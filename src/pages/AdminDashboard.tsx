@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Download, Users, RefreshCw, LogOut } from 'lucide-react';
+import { ArrowLeft, Download, Users, RefreshCw, LogOut, Trash2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 interface Registration {
@@ -21,6 +21,7 @@ const AdminDashboard = () => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     // Check for valid session token
@@ -77,6 +78,47 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDelete = async (registrationId: string) => {
+    const token = sessionStorage.getItem('adminToken');
+    const adminId = sessionStorage.getItem('adminId');
+    
+    if (!token || !adminId) {
+      navigate('/admin');
+      return;
+    }
+
+    if (!confirm('Are you sure you want to delete this registration?')) {
+      return;
+    }
+
+    setDeletingId(registrationId);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-registrations', {
+        body: { token, adminId, action: 'delete', registrationId }
+      });
+
+      if (error) {
+        console.error('Delete error:', error);
+        toast.error('Failed to delete registration');
+        return;
+      }
+
+      if (data?.error) {
+        toast.error(data.error);
+        return;
+      }
+
+      toast.success('Registration deleted successfully');
+      setRegistrations(prev => prev.filter(r => r.id !== registrationId));
+    } catch (err) {
+      console.error('Delete error:', err);
+      toast.error('Failed to delete registration');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const handleExport = async () => {
     setIsExporting(true);
     try {
@@ -100,7 +142,7 @@ const AdminDashboard = () => {
       }));
       worksheet['!cols'] = colWidths;
 
-      XLSX.writeFile(workbook, `StellarReg_Registrations_${new Date().toISOString().split('T')[0]}.xlsx`);
+      XLSX.writeFile(workbook, `Codeathon2K25_Registrations_${new Date().toISOString().split('T')[0]}.xlsx`);
       toast.success('Excel file downloaded successfully!');
     } catch (err) {
       toast.error('Failed to export data');
@@ -143,11 +185,11 @@ const AdminDashboard = () => {
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="font-display text-2xl text-primary glow-text">
+              <h1 className="font-display text-2xl gradient-text-animated">
                 Mission Control
               </h1>
               <p className="text-muted-foreground text-sm">
-                Registration Dashboard
+                CODEATHON 2K25 Dashboard
               </p>
             </div>
           </div>
@@ -222,20 +264,21 @@ const AdminDashboard = () => {
                   <th className="text-left p-4 font-display text-sm text-primary">Phone</th>
                   <th className="text-left p-4 font-display text-sm text-primary">Branch</th>
                   <th className="text-left p-4 font-display text-sm text-primary">Date & Time</th>
+                  <th className="text-left p-4 font-display text-sm text-primary">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {isLoading ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">
+                    <td colSpan={7} className="p-8 text-center text-muted-foreground">
                       <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2" />
                       Loading registrations...
                     </td>
                   </tr>
                 ) : registrations.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-muted-foreground">
-                      No registrations yet. The cosmos awaits! 🌟
+                    <td colSpan={7} className="p-8 text-center text-muted-foreground">
+                      No registrations yet. The coding journey awaits!
                     </td>
                   </tr>
                 ) : (
@@ -258,6 +301,16 @@ const AdminDashboard = () => {
                       </td>
                       <td className="p-4 text-muted-foreground text-sm">
                         {new Date(r.created_at).toLocaleString()}
+                      </td>
+                      <td className="p-4">
+                        <button
+                          onClick={() => handleDelete(r.id)}
+                          disabled={deletingId === r.id}
+                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-destructive/20 border border-destructive/50 hover:bg-destructive/30 transition-colors text-destructive text-sm disabled:opacity-50"
+                        >
+                          <Trash2 className={`w-3 h-3 ${deletingId === r.id ? 'animate-spin' : ''}`} />
+                          Delete
+                        </button>
                       </td>
                     </motion.tr>
                   ))

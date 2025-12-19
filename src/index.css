@@ -130,6 +130,39 @@
       0 0 40px hsl(var(--accent) / 0.3);
   }
 
+  .vibrant-text {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 25%,
+      hsl(var(--secondary)) 50%,
+      hsl(var(--primary)) 75%,
+      hsl(var(--accent)) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: vibrant-shift 3s linear infinite;
+  }
+
+  .gradient-text-animated {
+    background: linear-gradient(
+      270deg,
+      hsl(190 100% 60%) 0%,
+      hsl(260 60% 60%) 25%,
+      hsl(35 100% 55%) 50%,
+      hsl(190 100% 60%) 75%,
+      hsl(260 60% 60%) 100%
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-shift 4s ease infinite;
+    text-shadow: none;
+  }
+
   .btn-cosmic {
     @apply relative overflow-hidden px-8 py-4 font-display font-semibold text-lg rounded-xl;
     @apply bg-gradient-to-r from-primary/20 to-secondary/20;
@@ -250,6 +283,17 @@
 @keyframes scale-in {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes vibrant-shift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Scrollbar */
