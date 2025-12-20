@@ -45,6 +45,10 @@ const PLANET_CONFIGS: Record<string, {
     secondaryColor: '#8B4513',
     atmosphereColor: '#DEB887',
     surfaceRoughness: 0.8,
+    moons: [
+      { orbitRadius: 0.9, size: 0.06, color: '#A89080', orbitSpeed: 1.5, initialAngle: 0 },
+      { orbitRadius: 1.2, size: 0.04, color: '#B8A090', orbitSpeed: 1.0, initialAngle: Math.PI },
+    ],
   },
   'Jupiter': {
     baseColor: '#D4A574',
@@ -70,6 +74,7 @@ const PLANET_CONFIGS: Record<string, {
     moons: [
       { orbitRadius: 2.8, size: 0.18, color: '#FFF8DC', orbitSpeed: 0.5, initialAngle: 0.5 },
       { orbitRadius: 3.2, size: 0.08, color: '#FFFACD', orbitSpeed: 0.7, initialAngle: 2.5 },
+      { orbitRadius: 3.6, size: 0.1, color: '#F0E68C', orbitSpeed: 0.4, initialAngle: 1.2 },
     ],
   },
   'Uranus': {
@@ -79,7 +84,14 @@ const PLANET_CONFIGS: Record<string, {
     hasRings: true,
     ringColor: '#A8C8D8',
     surfaceRoughness: 0.3,
-    uranusRings: true, // Special flag for vertical rings
+    uranusRings: true,
+    moons: [
+      { orbitRadius: 1.4, size: 0.08, color: '#B0C4DE', orbitSpeed: 0.8, initialAngle: 0 },
+      { orbitRadius: 1.7, size: 0.1, color: '#ADD8E6', orbitSpeed: 0.6, initialAngle: Math.PI / 3 },
+      { orbitRadius: 2.0, size: 0.07, color: '#87CEEB', orbitSpeed: 0.5, initialAngle: Math.PI },
+      { orbitRadius: 2.3, size: 0.09, color: '#B0E0E6', orbitSpeed: 0.4, initialAngle: Math.PI * 1.5 },
+      { orbitRadius: 2.6, size: 0.11, color: '#AFEEEE', orbitSpeed: 0.3, initialAngle: Math.PI / 6 },
+    ],
   },
   'Neptune': {
     baseColor: '#4169E1',
@@ -87,7 +99,8 @@ const PLANET_CONFIGS: Record<string, {
     atmosphereColor: '#6495ED',
     surfaceRoughness: 0.3,
     moons: [
-      { orbitRadius: 1.3, size: 0.1, color: '#E0E0E0', orbitSpeed: 0.6 },
+      { orbitRadius: 1.3, size: 0.12, color: '#E0E0E0', orbitSpeed: 0.6 },
+      { orbitRadius: 1.6, size: 0.06, color: '#D0D0D0', orbitSpeed: 0.9, initialAngle: Math.PI / 2 },
     ],
   },
 };
