@@ -88,8 +88,14 @@ const Index = () => {
           </motion.div>
           
           <button
-            onClick={() => navigate('/admin')}
+            onClick={() => navigate('/')}
             className="font-display text-xs text-muted-foreground hover:text-primary transition-colors mt-2"
+          >
+            Back to Home
+          </button>
+          <button
+            onClick={() => navigate('/admin')}
+            className="font-display text-xs text-muted-foreground hover:text-primary transition-colors mt-2 ml-4"
           >
             Admin Portal
           </button>
