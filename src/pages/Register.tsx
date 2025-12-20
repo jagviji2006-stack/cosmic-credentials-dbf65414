@@ -128,7 +128,7 @@ const Register = () => {
           className="flex items-center justify-between mb-8"
         >
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/codeathon')}
             className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors font-body"
           >
             <ArrowLeft className="w-5 h-5" />
