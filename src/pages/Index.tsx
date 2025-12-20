@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SolarSystemScene } from '@/components/SolarSystem/SolarSystemScene';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
 
 const quotations = [
   "Code is poetry written in logic.",
@@ -36,11 +37,34 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
+      {/* Go Back Button - Top Left */}
+      <motion.button
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3 }}
+        onClick={() => navigate('/')}
+        className="absolute top-4 left-4 md:top-6 md:left-6 z-20 flex items-center gap-2 px-4 py-2 rounded-lg glass-panel text-muted-foreground hover:text-primary hover:border-primary/50 transition-all duration-300 font-body text-sm"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        <span className="hidden sm:inline">Back to Home</span>
+      </motion.button>
+
+      {/* Admin Portal - Top Right */}
+      <motion.button
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3 }}
+        onClick={() => navigate('/admin')}
+        className="absolute top-4 right-4 md:top-6 md:right-6 z-20 px-4 py-2 rounded-lg glass-panel text-muted-foreground hover:text-primary hover:border-primary/50 transition-all duration-300 font-display text-xs"
+      >
+        Admin Portal
+      </motion.button>
+
       {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="absolute top-0 left-0 right-0 z-10 p-4 md:p-6"
+        className="absolute top-0 left-0 right-0 z-10 p-4 md:p-6 pt-16 md:pt-20"
       >
         <div className="container mx-auto flex flex-col items-center gap-2">
           {/* Institute Name */}
@@ -86,19 +110,6 @@ const Index = () => {
               </motion.p>
             </AnimatePresence>
           </motion.div>
-          
-          <button
-            onClick={() => navigate('/')}
-            className="font-display text-xs text-muted-foreground hover:text-primary transition-colors mt-2"
-          >
-            Back to Home
-          </button>
-          <button
-            onClick={() => navigate('/admin')}
-            className="font-display text-xs text-muted-foreground hover:text-primary transition-colors mt-2 ml-4"
-          >
-            Admin Portal
-          </button>
         </div>
       </motion.header>
 
